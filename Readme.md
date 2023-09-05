@@ -8,7 +8,6 @@
 - **Usage**
 - **Configuration**
 - **Database Setup**
-- **Development**
 - **Contributing**
 - **License**
 
@@ -40,19 +39,15 @@ Your Django app should now be running locally at `http://localhost:8000/`.
 
 ## Usage
 
-Explain how to use your Django app, including any important commands, URLs, or features.
+If you find this app useful, you're welcome to use as many of its features as you like.
 
 ## Configuration
 
-Describe any environment variables or configuration files that need to be set up for your app.
+Enviromnent variables can be set in the `settings.py` file.
 
 ## Database Setup
 
-Explain how to set up and configure the database for your Django app. Include any necessary information such as database engine, credentials, and migration details.
-
-## Development
-
-If you plan to actively develop this app, provide guidelines for contributing, setting up a development environment, running tests, and any development-specific details.
+The database for this project is to be determined yet.
 
 ## Contributing
 
@@ -60,4 +55,4 @@ This project is currently not available for contributions.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE.md). You are free to use, modify, and distribute it as per the terms of the license.
+This project is licensed under the [MIT License](LICENSE.md). You are free to use, modify, and distribute it.
