@@ -8,13 +8,6 @@ DEBUG = False
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        #'NAME': 'inventory',
-        #'USER': 'rootuser',
-        #'PASSWORD': 'root',
-        #'HOST': 'localhost',
-        #'PORT': '3306',
-        #'OPTIONS': {
-            #optional for mysql
-        #}
+        #'read_default_file': 'settings/main.cnf',
     }
 }
