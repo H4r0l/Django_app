@@ -1,4 +1,4 @@
-# Your Django App Name
+# Django App
 
 **Description**: This Django application is my personal project template and reference for Django development. It's a private resource I've created to streamline the process of starting new Django projects and to keep track of best practices and useful code snippets I've come across..
 
