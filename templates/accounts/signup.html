@@ -3,12 +3,12 @@
 <div class="login-container container">
     <div class="card">
         <div class="card-body">
-            <h1 class="text-center mb-5">Login</h1>
+            <h1 class="text-center mb-5">Signup</h1>
             
-            <form action={% url 'login' %} method="post">
+            <form action={% url 'signup' %} method="post">
                 {% csrf_token %}
                 {{ form }}
-                <input class="btn submit-btn btn-tomato" type="submit" value="Login">
+                <input class="btn submit-btn btn-tomato" type="submit" value="Sigup">
             </form>
             
         </div>
