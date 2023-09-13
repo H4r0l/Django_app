@@ -1,7 +1,7 @@
 runserver-local: migrate
 	python manage.py runserver --settings=settings.local
 
-makemigrations:
+newmigrations:
 	python manage.py makemigrations --settings=settings.local
 
 migrate:
