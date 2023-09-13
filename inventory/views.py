@@ -1,6 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Product
+from django.contrib.auth.decorators import (
+    login_required, permission_required
+)
+
+from .models import Product, Comment
+from .forms import comments_form
 # Create your views here
 
 def index(request):
@@ -8,5 +13,27 @@ def index(request):
     return render(request,'products/list_of_products.html', {'products': products})
 
 def get_product(request, id):
-    product = Product.objects.get(id=id)
-    return render(request, 'products/show_product.html', {'product': product})
+    product = Product.objects.get(id = id)
+
+    comments = Comment.objects.filter(product = id)
+    form = comments_form
+    return render(request, 'products/show_product.html', {'product': product,
+                                                          'comments':comments,
+                                                          'form':form})
+
+@login_required
+@permission_required('products.add_comment', raise_exception=True)
+def add_new_comment(request, id):
+    if request.method == 'POST':
+        form = comments_form(request.POST)
+        if form.is_valid():
+            user = request.user
+            product = Product.objects.get(id = id)
+
+            new_comment = form.save(commit=False)
+            new_comment.author = user
+            new_comment.product = product
+
+            new_comment.save()
+
+    return redirect('get_product', id)
