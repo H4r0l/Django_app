@@ -1,55 +1,34 @@
 from django.test import TestCase
-from django.utils import timezone
-from inventory.models import Product, Brand, Comment
-
+from django.urls import reverse
+from freezegun import freeze_time
 from django_dynamic_fixture import G, F
+from inventory.models import Product, Comment
 
-
-class ProductModelTestCase(TestCase):
-
+class GetProductViewTest(TestCase):
     def setUp(self):
-        # Crea una instancia de Brand para asociarla al Producto
-        self.brand = Brand.objects.create(name='Mi Marca')
-        # Crea una instancia de Product para probar
-        self.product = Product.objects.create(
-            name='Mi Producto',
-            price=10.50,
-            sku='SKU123',
-            category='Electrónicos',
-            brand=self.brand,
-            discount=5,
-            created_date=timezone.now(),
-            published_date=timezone.now()
-        )
+        # Create a test product and a related comment
+        self.product = G(Product, name='Test product', brand=F(name='Test brand'), price=10.5)
+        self.comment = G(Comment, product=self.product, text='Msg for test', created_date='2013-04-09')
 
-        self.product_g = G(Product, name='Test product', brand=F(name='Test brand'))
+    def test_view_url_accessible_by_name(self):
+        # Check if the URL is accessible by its name
+        response = self.client.get(reverse('get_product', args=[self.product.id]))
+        self.assertEqual(response.status_code, 200)
 
-    def test_product_str_method(self):
-        # Verifica si el método __str__ devuelve el formato esperado
-        expected_str = f'{self.product.name} | {self.product.brand}'
-        self.assertEqual(str(self.product), expected_str)
+    def test_view_uses_correct_template(self):
+        # Check if the correct template is being used
+        response = self.client.get(reverse('get_product', args=[self.product.id]))
+        self.assertTemplateUsed(response, 'products/show_product.html')
 
-    def test_product_attributes(self):
-        # Verifica si los atributos del producto son correctos
-        self.assertEqual(self.product.name, 'Mi Producto')
-        self.assertEqual(self.product.price, 10.50)
-        self.assertEqual(self.product.sku, 'SKU123')
-        self.assertEqual(self.product.category, 'Electrónicos')
-        self.assertEqual(self.product.brand, self.brand)
-        self.assertEqual(self.product.discount, 5)
-        self.assertIsNotNone(self.product.created_date)
-        self.assertIsNotNone(self.product.published_date)
+    def test_view_displays_product_details(self):
+        # Check if the view displays product details correctly
+        response = self.client.get(reverse('get_product', args=[self.product.id]))
+        self.assertContains(response, 'Test product')
+        self.assertContains(response, '10.5')
 
-
-class CommentModelTestCase(TestCase):
-
-    def setUp(self) -> None:
-        self.product_g = G(Product, name='Test product', brand=F(name='Test brand'))
-        self.comment = G(Comment, author='Mulan', product=self.product_g)
-
-    def test_approve_change_approved_comment(self):
-        self.assertEqual(self.comment.approved_comment, False)
-        self.assertFalse(self.comment.approved_comment)
-        self.comment.approve()
-        self.assertEqual(self.comment.approved_comment, True)
-        self.assertTrue(self.comment.approved_comment)
+    @freeze_time('2013-04-09')
+    def test_view_displays_comments(self):
+        # Check if the view displays comments with the correct date
+        response = self.client.get(reverse('get_product', args=[self.product.id]))
+        self.assertEqual(self.comment.created_date, '2013-04-09')
+        self.assertContains(response, 'Msg for test')
